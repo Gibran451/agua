@@ -1,0 +1,162 @@
+{
+	"formatVersion": 2,
+	"appVersion": "0.60.4",
+	"files": [
+		{
+			"isClone": false,
+			"noteId": "6B4mIDfANren",
+			"notePath": [
+				"6B4mIDfANren"
+			],
+			"title": "APLICACIÓN MONITOREO Y GESTIÓN HÍDRICA EN CDMX",
+			"notePosition": 30,
+			"prefix": null,
+			"isExpanded": true,
+			"type": "text",
+			"mime": "text/html",
+			"attributes": [
+				{
+					"type": "relation",
+					"name": "imageLink",
+					"value": "H0lwwP88tjPG",
+					"isInheritable": false,
+					"position": 6
+				},
+				{
+					"type": "relation",
+					"name": "imageLink",
+					"value": "kBILgPiaxdRq",
+					"isInheritable": false,
+					"position": 7
+				},
+				{
+					"type": "relation",
+					"name": "imageLink",
+					"value": "0LjjRZx2kt7j",
+					"isInheritable": false,
+					"position": 8
+				},
+				{
+					"type": "relation",
+					"name": "imageLink",
+					"value": "nAiWGmMHlx8n",
+					"isInheritable": false,
+					"position": 11
+				}
+			],
+			"format": "html",
+			"dataFileName": "APLICACIÓN MONITOREO Y GESTIÓN.html",
+			"dirFileName": "APLICACIÓN MONITOREO Y GESTIÓN HÍDRICA EN CDMX",
+			"children": [
+				{
+					"isClone": false,
+					"noteId": "H0lwwP88tjPG",
+					"notePath": [
+						"6B4mIDfANren",
+						"H0lwwP88tjPG"
+					],
+					"title": "LOGOMASAGUA.png",
+					"notePosition": 40,
+					"prefix": null,
+					"isExpanded": false,
+					"type": "image",
+					"mime": "image/jpg",
+					"attributes": [
+						{
+							"type": "label",
+							"name": "originalFileName",
+							"value": "LOGOMASAGUA.png",
+							"isInheritable": false,
+							"position": 1000
+						}
+					],
+					"dataFileName": "LOGOMASAGUA.png"
+				},
+				{
+					"isClone": false,
+					"noteId": "kBILgPiaxdRq",
+					"notePath": [
+						"6B4mIDfANren",
+						"kBILgPiaxdRq"
+					],
+					"title": "a.png",
+					"notePosition": 60,
+					"prefix": null,
+					"isExpanded": false,
+					"type": "image",
+					"mime": "image/jpg",
+					"attributes": [
+						{
+							"type": "label",
+							"name": "originalFileName",
+							"value": "a.png",
+							"isInheritable": false,
+							"position": 1000
+						}
+					],
+					"dataFileName": "a.png"
+				},
+				{
+					"isClone": false,
+					"noteId": "0LjjRZx2kt7j",
+					"notePath": [
+						"6B4mIDfANren",
+						"0LjjRZx2kt7j"
+					],
+					"title": "s.png",
+					"notePosition": 70,
+					"prefix": null,
+					"isExpanded": false,
+					"type": "image",
+					"mime": "image/png",
+					"attributes": [
+						{
+							"type": "label",
+							"name": "originalFileName",
+							"value": "s.png",
+							"isInheritable": false,
+							"position": 1000
+						}
+					],
+					"dataFileName": "s.png"
+				},
+				{
+					"isClone": false,
+					"noteId": "nAiWGmMHlx8n",
+					"notePath": [
+						"6B4mIDfANren",
+						"nAiWGmMHlx8n"
+					],
+					"title": "Diagrama sign título.drawio.png",
+					"notePosition": 80,
+					"prefix": null,
+					"isExpanded": false,
+					"type": "image",
+					"mime": "image/jpg",
+					"attributes": [
+						{
+							"type": "label",
+							"name": "originalFileName",
+							"value": "Diagrama sign título.drawio.png",
+							"isInheritable": false,
+							"position": 1000
+						}
+					],
+					"dataFileName": "Diagrama sign título.drawio.pn"
+				}
+			]
+		},
+		{
+			"noImport": true,
+			"dataFileName": "navigation.html"
+		},
+		{
+			"noImport": true,
+			"dataFileName": "index.html"
+		},
+		{
+			"noImport": true,
+			"dataFileName": "style.css"
+		}
+	]
+}
