@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MasAgua - Demo</title>
+  <style>
+    /* Reset básico */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#0c2b4a; background:#ffffff; }
+
+    /* PRELOADER */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      background: #0c2b4a;
+      z-index: 9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .preloader .logo {
+      width: 90px;            /* tamaño pequeño del logo dentro del preloader */
+      height: 90px;
+      background-image: url('logo.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: translateZ(0);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+    }
+    .preloader .site {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #cfa766;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      font-size: 18px;
+    }
+
+    /* Layout principal */
+    .wrap {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    /* SLIDER */
+    .slider-container {
+      width: 80vw;         /* ocupa 80% del ancho de la pantalla */
+      max-width: 1200px;
+      height: 90vh;        /* 60% del alto de la pantalla */
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(12,43,74,0.12);
+      background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));
+    }
+
+    .slides {
+      display:flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s ease;
+      will-change: transform;
+    }
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      display:block;
+      user-select: none;
+      -webkit-user-drag: none;
+      position: relative;
+    }
+    .slide img {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    /* Dots */
+    .dots {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 14px;
+      display:flex;
+      gap:8px;
+      z-index: 5;
+    }
+    .dot {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: rgba(255,255,255,0.6);
+      border: 2px solid rgba(12,43,74,0.08);
+      cursor:pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .dot.active {
+      transform: scale(1.35);
+      background: rgba(255,255,255,0.95);
+    }
+
+    /* Imagen grande debajo del slider */
+    .hero-image {
+      width: 95%;
+      margin: 24px auto;
+      display:block;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(12,43,74,0.06);
+    }
+    .hero-image img {
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit: cover;
+    }
+
+    /* Contenido textual jerarquizado */
+    .temario {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 18px;
+      line-height: 1.45;
+      color: #0c2b4a;
+    }
+    .temario h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      text-align:left;
+    }
+    .temario ol {
+      margin-left: 18px;
+      margin-bottom: 12px;
+    }
+    .temario li { margin-bottom: 6px; }
+
+    /* Imagen final a pantalla completa en alto */
+
+    .image-full-height img {
+      width: 70%;
+
+      object-fit: cover;
+      display:block;
+      margin-left: 10%;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .slider-container { width: 92vw; height: 50vh; }
+      .preloader .logo { width: 72px; height: 72px; }
+      .preloader .site { font-size: 16px; bottom: 28px; }
+    }
+    @media (max-width: 480px) {
+      .slider-container { height: 40vh; }
+      .temario h1 { font-size: 22px; }
+      .preloader .logo { width: 60px; height: 60px; }
+    }
+
+    /* Pequeña transición para cuando desaparece el preloader */
+    .preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div class="preloader" id="preloader" aria-hidden="false" role="status" aria-label="Cargando sitio">
+    <div class="logo" role="img" aria-label="Logo"></div>
+    <div class="site">www.masagua.online</div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main id="mainContent" style="visibility:hidden;">
+    <div class="wrap">
+
+      <!-- SLIDER -->
+      <section aria-label="Carrusel de imágenes" style="text-align:center;">
+        <div class="slider-container" id="slider">
+          <div class="slides" id="slides">
+            <div class="slide"><img src="imagen2.png" alt="Imagen 2"></div>
+            <div class="slide"><img src="imagen3.png" alt="Imagen 3"></div>
+            <div class="slide"><img src="imagen4.png" alt="Imagen 4"></div>
+            <div class="slide"><img src="imagen5.png" alt="Imagen 5"></div>
+               <div class="slide"><img src="imagen7.png" alt="Imagen 7"></div>
+          </div>
+          <div class="dots" id="dots" aria-hidden="false"></div>
+        </div>
+      </section>
+
+      <!-- IMAGEN 95% ANCHO -->
+      <section style="text-align:center;">
+        <figure class="hero-image" aria-hidden="false">
+          <img src="imagen.png" alt="Imagen principal de contenido">
+        </figure>
+      </section>
+
+      <!-- TEMARIO -->
+      <section class="temario" aria-labelledby="temarioTitle">
+        <h1 id="temarioTitle">Temario Estructurado</h1>
+
+        <!-- Aquí dejo la jerarquía usando listas anidadas para mantener orden -->
+        <ol>
+          <li>
+            <strong>2. Fundamentación teórica y tecnológica</strong>
+            <ol>
+              <li>
+                <strong>2.1 Conceptos de Geomática</strong>
+                <ol>
+                  <li>
+                    <strong>2.1.1 Conceptos básicos de geomática y cartografía</strong>
+                    <ol type="a">
+                      <li>Proyecciones cartográficas para México</li>
+                      <li>Simbología y representación</li>
+                      <li>Escalas y niveles de detalle</li>
+                    </ol>
+                  </li>
+                  <li>
+                    <strong>2.1.2 Sistema de referencia geodésico</strong>
+                    <ol type="a">
+                      <li>Datum</li>
+                      <li>Elipsoide</li>
+                      <li>Proyección cartográfica</li>
+                      <li>Marco de referencia</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+
+              <li>
+                <strong>2.2 Sistemas de Información Geográfica</strong>
+                <ol>
+                  <li>
+                    <strong>2.2.1 Conceptos básicos</strong>
+                    <ol type="a">
+                      <li>Procesos de un sistema de información geográfica</li>
+                      <li>Componentes de un sistema de información geográfica</li>
+                      <li>Evolución e historia</li>
+                    </ol>
+                  </li>
+                  <li>
+                    <strong>2.2.2 Fuentes de datos geoespaciales</strong>
+                    <ol type="a">
+                      <li>Instituciones proveedoras de información (Instituto Nacional de Estadística y Geografía, Comisión Nacional del Agua, entre otras)</li>
+                      <li>Capas vectoriales y ráster</li>
+                      <li>Datos continuos y datos discretos</li>
+                    </ol>
+                  </li>
+                  <li>
+                    <strong>2.2.3 Servicios y tecnologías SIG</strong>
+                    <ol type="a">
+                      <li>Servicios de mapas</li>
+                      <li>Sistemas de información geográfica en la web</li>
+                      <li>Análisis multicriterio</li>
+                      <li>Teledetección</li>
+                    </ol>
+                  </li>
+                  <li>
+                    <strong>2.2.4 Integración geodésica en sistemas de información geográfica</strong>
+                    <ol type="a">
+                      <li>Normalización y estándares geodésicos</li>
+                      <li>EPSG</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+
+              <li>
+                <strong>2.3 Disciplinas complementarias</strong>
+                <ol>
+                  <li>
+                    <strong>2.3.1 Ciencias de la Tierra y del Clima</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Meteorología</strong>
+                        <ol type="i">
+                          <li>Factores climáticos que influyen en la disponibilidad de agua</li>
+                          <li>Modelos meteorológicos (Global Forecast System, Weather Research and Forecasting)</li>
+                          <li>Precipitación, evaporación y balance hídrico atmosférico</li>
+                          <li>Eventos extremos (sequías, lluvias intensas, ciclones)</li>
+                          <li>Aplicación de modelos meteorológicos y ambientales en sistemas de información geográfica</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Geomorfología</strong>
+                        <ol type="i">
+                          <li>Formas del relieve y su clasificación</li>
+                          <li>
+                            A. Formas convexas<br>
+                            B. Formas cóncavas<br>
+                            C. Formas de acumulación y transición
+                          </li>
+                          <li>Procesos geomorfológicos relevantes para la seguridad hídrica</li>
+                          <li>
+                            A. Depresión<br>
+                            B. Hondonada<br>
+                            C. Hoya<br>
+                            D. Valle
+                          </li>
+                          <li>Factores del suelo y subsuelo</li>
+                          <li>Transformaciones antrópicas del relieve</li>
+                          <li>Representación cartográfica de la geomorfología</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>c. Hidráulica e Hidrografía</strong>
+                        <ol type="i">
+                          <li>Obras hidráulicas</li>
+                          <li>Redes de drenaje</li>
+                          <li>Sistemas de captación de lluvia, conducción y almacenamiento</li>
+                          <li>Redes de drenaje natural y artificial</li>
+                          <li>Cuencas hidrológicas</li>
+                          <li>Cuerpos de agua</li>
+                          <li>Sistema de abastecimiento de agua potable de la Ciudad de México</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.3.2 Ciencias Ambientales</strong>
+                    <ol type="a">
+                      <li>Gestión ambiental y socioambiental
+                        <ol type="i">
+                          <li>Evaluación del impacto ambiental</li>
+                          <li>Ordenamiento ecológico y territorial</li>
+                          <li>Gobernanza del agua y participación ciudadana</li>
+                          <li>Indicadores de sustentabilidad hídrica</li>
+                          <li>Gestión integrada del recurso hídrico</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.3.3 Ciencias Sociales y Geografía</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Geografía humana</strong>
+                        <ol type="i">
+                          <li>Distribución y dinámica poblacional</li>
+                          <li>Urbanización y presión sobre recursos</li>
+                          <li>Movilidad y desigualdad territorial</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Geografía económica y política</strong>
+                        <ol type="i">
+                          <li>Uso del agua en sectores productivos</li>
+                          <li>Infraestructura y acceso desigual</li>
+                          <li>Economía del agua y precios del recurso</li>
+                          <li>Gobernanza y conflictos por el agua</li>
+                          <li>Políticas públicas y gestión hídrica</li>
+                          <li>Escalas de decisión: local, regional y nacional</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.3.4 Vulnerabilidad y riesgo</strong>
+                    <ol type="a">
+                      <li>Teoría de la vulnerabilidad</li>
+                      <li>Teoría de la resiliencia</li>
+                      <li>Marco Presión–Estado–Respuesta (PER)</li>
+                      <li>Teoría del riesgo social</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+
+              <li>
+                <strong>2.4 Desarrollo de Software</strong>
+                <ol>
+                  <li>
+                    <strong>2.4.1 Desarrollo de la interfaz y experiencia de usuario (UI y UX)</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Desarrollo del Frontend</strong>
+                        <ol type="i">
+                          <li>Lenguajes y tecnologías: HTML, CSS, JavaScript</li>
+                          <li>Librerías tradicionales y especializadas (OpenLayers, Leaflet)</li>
+                          <li>Diseño gráfico aplicado y responsividad</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Ideación y diseño de experiencia de usuario</strong>
+                        <ol type="i">
+                          <li>Prototipado y wireframes</li>
+                          <li>Accesibilidad e interacción</li>
+                          <li>Testing y validación con usuarios</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.4.2 Desarrollo del Backend</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Lenguajes y frameworks</strong>
+                        <ol type="i">
+                          <li>Java con Jakarta EE y Maven</li>
+                          <li>Python para procesamiento de datos o inteligencia artificial</li>
+                          <li>Entornos de desarrollo integrados (NetBeans, Visual Studio Code, GitHub)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Interfaces de programación y servicios web</strong>
+                        <ol type="i">
+                          <li>Principios REST y definición de endpoints</li>
+                          <li>Documentación mediante Swagger y Postman</li>
+                          <li>Integración de interfaces externas (meteorología, inteligencia artificial y sistemas de información geográfica)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>c. Automatización e inteligencia artificial</strong>
+                        <ol type="i">
+                          <li>Flujos automatizados con la herramienta n8n</li>
+                          <li>Integración de modelos predictivos y analíticos</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.4.3 Tipos de aplicaciones y adaptabilidad multiplataforma</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Aplicaciones web</strong>
+                        <ol type="i">
+                          <li>Arquitectura cliente-servidor</li>
+                          <li>Integración con mapas geoespaciales (GeoServer, interfaces REST)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Aplicaciones móviles</strong>
+                        <ol type="i">
+                          <li>Aplicaciones nativas, híbridas y progresivas</li>
+                          <li>Frameworks híbridos (Ionic, React Native, Flutter)</li>
+                          <li>Transición de web a móvil mediante WebView y aplicaciones progresivas</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.4.4 Servicios y publicación de datos geoespaciales</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Servidores de aplicaciones</strong>
+                        <ol type="i">
+                          <li>Apache Tomcat</li>
+                          <li>Apache HTTP</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Servidor geoespacial GeoServer</strong>
+                        <ol type="i">
+                          <li>Publicación de capas</li>
+                          <li>Definición de estilos mediante archivos SLD</li>
+                          <li>Creación de teselas y mapas base</li>
+                          <li>Conexión con clientes web (OpenLayers, Leaflet)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>c. Interfaces geoespaciales y servicios web</strong>
+                        <ol type="i">
+                          <li>Estándares del Open Geospatial Consortium (WMS, WFS, WCS)</li>
+                          <li>Integración con aplicaciones externas</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.4.5 Infraestructura y despliegue</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Servicios en la nube</strong>
+                        <ol type="i">
+                          <li>Proveedores de infraestructura (Amazon Web Services, Google Cloud Platform, Microsoft Azure, Hetzner, DigitalOcean)</li>
+                          <li>Ventajas para sistemas geoespaciales en la web</li>
+                          <li>Gestión de recursos y escalabilidad</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>b. Contenedores y orquestación</strong>
+                        <ol type="i">
+                          <li>Docker y Docker Compose</li>
+                          <li>Contenedores para GeoServer, interfaces de programación y base de datos</li>
+                          <li>Automatización de despliegues</li>
+                          <li>Seguridad, monitoreo y mantenimiento</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.4.6 Base de datos y almacenamiento espacial</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. PostgreSQL y PostGIS</strong>
+                        <ol type="i">
+                          <li>Diseño de esquemas espaciales</li>
+                          <li>Consultas espaciales y funciones geográficas</li>
+                          <li>Integración con GeoServer y la interfaz de programación</li>
+                          <li>Vistas materializadas y optimización de rendimiento</li>
+                          <li>Sincronización de datos y copias de seguridad</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>2.4.7 Visualización avanzada y modelos tridimensionales</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>a. Modelos tridimensionales en sistemas de información geográfica</strong>
+                        <ol type="i">
+                          <li>Representación de terrenos e infraestructura</li>
+                          <li>Uso del visor de modelos en entornos web</li>
+                          <li>Creación y despliegue de modelos tridimensionales</li>
+                        </ol>
+                      </li>
+                      <li>Herramientas: Blender, fotogrametría y nubes de puntos</li>
+                      <li>Exportación y visualización interactiva</li>
+                    </ol>
+                  </li>
+
+                </ol>
+              </li>
+
+              <li>
+                <strong>3. Marco metodológico y desarrollo del sistema</strong>
+                <ol>
+                  <li>
+                    <strong>3.1 Diseño general del sistema</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>3.1.1 Análisis de requerimientos</strong>
+                        <ol type="i">
+                          <li>Requerimientos funcionales y no funcionales</li>
+                          <li>Casos de uso y usuarios del sistema</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.2 Arquitectura de software</strong>
+                        <ol type="i">
+                          <li>Principios de diseño modular</li>
+                          <li>Microservicios y modularización</li>
+                          <li>Integración de componentes y dependencias</li>
+                          <li>Comunicación entre módulos (API REST y servicios OGC)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.3 Modelos y estándares de arquitectura</strong>
+                        <ol type="i">
+                          <li>Modelo C4 (contexto, contenedor, componentes y código)</li>
+                          <li>Diagrama de implementación</li>
+                          <li>Modelos de servicio (IaaS, PaaS, SaaS)</li>
+                          <li>Modelos de arquitectura orientados a servicios (SOA)</li>
+                          <li>Modelos de datos y metadatos geoespaciales</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.4 Arquitectura de infraestructura web</strong>
+                        <ol type="i">
+                          <li>Flujo de información (entrada, procesamiento y visualización)</li>
+                          <li>Proxy inverso (Nginx, Traefik)</li>
+                          <li>Cacheo de contenido (memoria caché HTTP, CDN)</li>
+                          <li>Seguridad (HTTPS, CORS, autenticación y autorización)</li>
+                          <li>Redes, puertos y comunicación entre servicios</li>
+                          <li>Gestión de errores y tolerancia a fallos</li>
+                          <li>Integración continua y despliegue continuo (CI/CD)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.5 Fuentes de datos</strong>
+                        <ol type="i">
+                          <li>Datos geoespaciales (capas vectoriales y ráster)</li>
+                          <li>Datos meteorológicos (GFS, WRF, netCDF)</li>
+                          <li>Datos sociales (reportes ciudadanos)</li>
+                          <li>Datos institucionales (INEGI, CONAGUA, SACMEX)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.6 Procesos de análisis geoespacial y multicriterio</strong>
+                        <ol type="i">
+                          <li>Normalización y ponderación de criterios</li>
+                          <li>Análisis de vulnerabilidad y resiliencia</li>
+                          <li>Modelos de decisión multicriterio</li>
+                          <li>Generación de mapas de vulnerabilidad</li>
+                          <li>Validación de resultados y verificación espacial</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.7 Diagrama general del sistema</strong>
+                        <ol type="i">
+                          <li>Componentes principales y flujos de datos</li>
+                          <li>Interacción entre frontend, backend, base de datos y servicios externos</li>
+                          <li>Representación modular del sistema</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.1.8 Infraestructura y publicación de datos</strong>
+                        <ol type="i">
+                          <li>Publicación de capas en GeoServer</li>
+                          <li>Estilos SLD y mapas base</li>
+                          <li>Servicios web geoespaciales (WMS, WFS, WCS)</li>
+                          <li>Integración con clientes SIG (OpenLayers, Leaflet)</li>
+                          <li>Gestión de teselas y rendimiento</li>
+                          <li>Actualización automatizada de capas mediante n8n</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>3.2 Escalabilidad del sistema</strong>
+                    <ol type="a">
+                      <li>
+                        <strong>3.2.1 Nivel 1: Aplicación Frontend</strong>
+                        <ol type="i">
+                          <li>Tema: Infraestructura y abastecimiento de agua</li>
+                          <li>Tecnologías: HTML, CSS, JavaScript, OpenLayers</li>
+                          <li>Librerías: Leaflet, Chart.js, D3.js</li>
+                          <li>Interactividad y responsividad</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.2.2 Nivel 2: Software como Servicio</strong>
+                        <ol type="i">
+                          <li>Firebase y GitHub Pages</li>
+                          <li>Gestión de usuarios</li>
+                          <li>APIs externas (meteorología, IA, SIG)</li>
+                        </ol>
+                      </li>
+                      <li>
+                        <strong>3.2.3 Nivel 3: Implementación en la nube</strong>
+                        <ol type="i">
+                          <li>Detección y monitoreo hidrometeorológico</li>
+                          <li>Jakarta EE, Python, PostgreSQL/PostGIS, GeoServer</li>
+                          <li>Despliegue en la nube y contenedores</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>3.3 Base de datos y almacenamiento espacial</strong>
+                    <ol type="a">
+                      <li>PostgreSQL y PostGIS: diseño, consultas y optimización</li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>3.4 Visualización avanzada y modelos tridimensionales</strong>
+                    <ol type="a">
+                      <li>Modelos 3D en SIG, exportación y visualización</li>
+                    </ol>
+                  </li>
+
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </section>
+
+    </div>
+
+    <!-- IMAGEN FINAL: 100% ALTO DE PANTALLA -->
+    <section class="image-full-height" aria-hidden="false">
+      <img src="imagen6.png" alt="Imagen a pantalla completa">
+    </section>
+  </main>
+
+  <script>
+    /* PRELOADER: se oculta cuando la ventana ha terminado de cargar */
+    (function(){
+      const preloader = document.getElementById('preloader');
+      const main = document.getElementById('mainContent');
+
+      window.addEventListener('load', () => {
+        // pequeña pausa para que se vea la transición (opcional)
+        setTimeout(() => {
+          preloader.classList.add('hidden');
+          preloader.setAttribute('aria-hidden', 'true');
+          main.style.visibility = 'visible';
+          // eliminar preloader del flujo después de la transición
+          setTimeout(() => preloader.style.display = 'none', 700);
+        }, 250); // 250ms opcional, puedes poner 0
+      });
+    })();
+
+    /* SLIDER AUTOMÁTICO */
+    (function(){
+      const slidesEl = document.getElementById('slides');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dotsContainer = document.getElementById('dots');
+      let index = 0;
+      const total = slides.length;
+      const intervalMs = 2000; // 3 segundos
+
+      // Crear dots
+      for (let i=0; i<total; i++){
+        const d = document.createElement('button');
+        d.className = 'dot' + (i===0 ? ' active' : '');
+        d.setAttribute('aria-label', 'Ir a la diapositiva ' + (i+1));
+        d.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(d);
+      }
+      const dots = Array.from(dotsContainer.children);
+
+      let timer = null;
+      function update(){
+        // translateX
+        slidesEl.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+
+      function next(){
+        index = (index + 1) % total;
+        update();
+      }
+      function goTo(i){
+        index = i % total;
+        update();
+        restartTimer();
+      }
+
+      function restartTimer(){
+        if (timer) clearInterval(timer);
+        timer = setInterval(next, intervalMs);
+      }
+
+      // iniciar
+      update();
+      restartTimer();
+
+      // Pausar cuando el ratón esté encima (mejora UX)
+      const slider = document.getElementById('slider');
+      slider.addEventListener('mouseenter', () => { if (timer) clearInterval(timer); });
+      slider.addEventListener('mouseleave', () => restartTimer());
+
+      // Touch support (swipe)
+      let startX = 0;
+      slider.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive:true});
+      slider.addEventListener('touchend', (e) => {
+        const endX = (e.changedTouches && e.changedTouches[0].clientX) || 0;
+        const diff = endX - startX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) { // swipe left -> next
+            next();
+          } else { // swipe right -> prev
+            index = (index - 1 + total) % total;
+            update();
+            restartTimer();
+          }
+        }
+      }, {passive:true});
+
+    })();
+  </script>
+</body>
+</html>
